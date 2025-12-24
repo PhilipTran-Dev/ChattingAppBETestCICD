@@ -21,10 +21,12 @@ jobs:
       - name: Build Project
         run: mvn clean package -DskipTests
 
+      # SỬ DỤNG ACTION CHÍNH CHỦ ĐỂ FIX LỖI LOGIN
       - name: Login to Docker Hub
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login \
-          -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
         run: docker build -t phucngo249/chatting-backend:latest .
@@ -37,6 +39,12 @@ jobs:
     runs-on: [ aws-ec2 ]
 
     steps:
+      - name: Login to Docker Hub on Runner
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Pull image
         run: docker pull phucngo249/chatting-backend:latest
 
@@ -47,7 +55,4 @@ jobs:
         run: docker rm chatting-backend || true
 
       - name: Run new container
-        run: docker run -d \
-          -p 8080:8080 \
-          --name chatting-backend \
-          phucngo249/chatting-backend:latest
+        run: docker run -d -p 8080:8080 --name chatting-backend phucngo249/chatting-backend:latest
