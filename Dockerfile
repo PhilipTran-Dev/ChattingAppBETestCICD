@@ -12,7 +12,9 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-COPY --from=build /app/target/ChattingAppBackend-0.0.1.jar app.jar
+# --- DÒNG ĐÃ SỬA ---
+# Dùng *.jar để chấp nhận cả tên có chữ SNAPSHOT hoặc không
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
