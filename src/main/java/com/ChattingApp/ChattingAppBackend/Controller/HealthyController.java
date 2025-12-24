@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthyController {
     @GetMapping("/health")
     public String health() {
-        return "OK I'm done cicd github actions with ec2 done";
+        return "Ok i need learn cicd s3 FE reactjs";
     }
 }
